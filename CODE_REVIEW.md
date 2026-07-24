@@ -93,3 +93,32 @@ README 和 SQL 中明文写着默认超管账号口令。必须从仓库文档�
 
 **长期**
 9. 补安全响应头/CSP；节假日数据外置以减少每年手工维护。
+
+## 六、待办清单（提醒事项）
+
+> 仅作为记录与跟踪用途，勾选表示已处理。
+
+### 🔴 立即处理（安全）
+- [ ] `POST /api/calendar` 增加角色校验（`hasManagementAccess`）或废弃该整体覆盖接口
+- [ ] 从 README 与 SQL 中移除默认超管口令，并强制首次登录改密
+- [ ] 附件改用私有桶 + 下载签发临时 URL（`getFileUrl`）
+- [ ] 附件上传以服务端会话 `user.id` 为准，不信任客户端传入的 `userId`
+
+### 🟠 尽快处理（数据库一致性）
+- [ ] 重写权威、可从零执行的 `init.sql`（含 `username`、`super_admin`、文本型 `user_id`、正确的 `operation_logs`）
+- [ ] 修正 `setup_super_admin.sql`（列名 `user_email`、`operation_type` 小写、去掉无条件 DELETE）
+- [ ] README 表结构与迁移脚本对齐（`original_name`/`cos_url`/`activity_links` 等）
+- [ ] 启用 RLS 并为共享表配置策略
+
+### 🟡 中期处理（健壮性）
+- [ ] 用 `waitUntil` 修复审计日志可能丢失的问题
+- [ ] 移除 `work-plans` GET 返回给前端的 `debug` 信息与调试日志
+- [ ] 统一 `logOperation` 传入的身份字段（对齐 `user_email` 列语义）
+- [ ] 合并 `/api/users` 与 `/api/admin/users` 两套用户管理接口
+- [ ] 修正工作计划 `weekStart` 过滤逻辑（按所属周而非 `created_at`）
+- [ ] 用外部缓存（Supabase/Redis）替代进程内内存缓存
+- [ ] 将日历规范化为 `activities` 表以根治并发丢更新
+
+### 🟢 长期优化
+- [ ] 补充安全响应头 / CSP
+- [ ] 节假日数据外置，减少每年手工维护
