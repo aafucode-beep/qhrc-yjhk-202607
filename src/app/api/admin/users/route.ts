@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { createSupabaseServerClientWithCookies } from '@/lib/supabase-server';
+import { createSupabaseServerClientWithCookies, createSupabaseAdminClient } from '@/lib/supabase-server';
 import { UserRole, OperationType } from '@/types';
 import { logOperation } from '@/lib/operations';
 
@@ -96,8 +96,9 @@ export async function POST(request: Request) {
     // 生成虚拟邮箱
     const virtualEmail = `${username}@qhrc.internal`;
 
-    // 在Supabase Auth中创建用户
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    // 在Supabase Auth中创建用户（需要 service role 密钥）
+    const adminSupabase = createSupabaseAdminClient();
+    const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
       email: virtualEmail,
       password,
       email_confirm: true
@@ -126,7 +127,7 @@ export async function POST(request: Request) {
     if (userError) {
       console.error('创建用户记录失败:', userError);
       // 如果用户记录创建失败，删除认证用户
-      await supabase.auth.admin.deleteUser(authData.user.id);
+      await adminSupabase.auth.admin.deleteUser(authData.user.id);
       return NextResponse.json(
         { message: '创建用户失败' },
         { status: 500 }

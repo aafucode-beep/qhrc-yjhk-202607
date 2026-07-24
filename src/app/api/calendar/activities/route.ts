@@ -20,6 +20,14 @@ export async function POST(request: Request) {
       );
     }
 
+    // 检查添加权限：只有管理员和超级管理员可以添加活动
+    if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPER_ADMIN) {
+      return NextResponse.json(
+        { message: '权限不足，只有管理员可以添加活动' },
+        { status: 403 }
+      );
+    }
+
     const { date, activity } = await request.json();
 
     if (!date || !activity || !activity.description) {

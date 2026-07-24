@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { createSupabaseServerClientWithCookies } from '@/lib/supabase-server';
+import { createSupabaseServerClientWithCookies, createSupabaseAdminClient } from '@/lib/supabase-server';
 import { UserRole, OperationType } from '@/types';
 import { logOperation } from '@/lib/operations';
 
@@ -151,8 +151,9 @@ export async function DELETE(
       );
     }
 
-    // 从Supabase Auth删除用户
-    const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(userId);
+    // 从 Supabase Auth 删除用户（需要 service role 密钥）
+    const adminSupabase = createSupabaseAdminClient();
+    const { error: deleteAuthError } = await adminSupabase.auth.admin.deleteUser(userId);
 
     if (deleteAuthError) {
       console.error('删除认证用户失败:', deleteAuthError);

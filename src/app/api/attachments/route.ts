@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createSupabaseServerClientWithCookies } from '@/lib/supabase-server';
 import { uploadFile, validateFileType, validateFileSize } from '@/lib/cos';
+import { UserRole } from '@/types';
 
 // 上传附件
 export async function POST(request: NextRequest) {
@@ -13,6 +14,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { message: '未授权' },
         { status: 401 }
+      );
+    }
+
+    // 检查上传权限：只有管理员和超级管理员可以上传附件
+    if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPER_ADMIN) {
+      return NextResponse.json(
+        { message: '权限不足，只有管理员可以上传附件' },
+        { status: 403 }
       );
     }
 

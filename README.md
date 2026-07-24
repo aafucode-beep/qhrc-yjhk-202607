@@ -123,10 +123,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 
 # 腾讯云COS配置
-TENCENT_SECRET_ID=your-secret-id
-TENCENT_SECRET_KEY=your-secret-key
-COS_BUCKET=your-bucket-name
-COS_REGION=your-region
+TENCENT_COS_SECRET_ID=your-secret-id
+TENCENT_COS_SECRET_KEY=your-secret-key
+TENCENT_COS_BUCKET=your-bucket-name
+TENCENT_COS_REGION=your-region
 ```
 
 4. **数据库初始化**
@@ -324,10 +324,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=     # Supabase匿名密钥
 SUPABASE_SERVICE_ROLE_KEY=         # Supabase服务角色密钥
 
 # 腾讯云COS文件存储配置
-TENCENT_SECRET_ID=                 # 腾讯云访问密钥ID
-TENCENT_SECRET_KEY=                # 腾讯云访问密钥
-COS_BUCKET=                        # COS存储桶名称
-COS_REGION=                        # COS存储区域
+TENCENT_COS_SECRET_ID=              # 腾讯云访问密钥ID
+TENCENT_COS_SECRET_KEY=             # 腾讯云访问密钥
+TENCENT_COS_BUCKET=                 # COS存储桶名称
+TENCENT_COS_REGION=                 # COS存储区域
 ```
 
 ### API接口文档

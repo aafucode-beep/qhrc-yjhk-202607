@@ -140,8 +140,8 @@ export async function updateUser(
   updates: { name?: string; role?: UserRole }
 ): Promise<{ success: boolean; error?: string; user?: User }> {
   try {
-    // 检查是否为管理员
-    if (adminUser.role !== UserRole.ADMIN) {
+    // 检查是否为管理员（管理员或超级管理员）
+    if (!hasManagementAccess(adminUser.role)) {
       return { success: false, error: '只有管理员可以更新用户' };
     }
 
@@ -182,8 +182,8 @@ export async function deleteUser(
   userEmail: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // 检查是否为管理员
-    if (adminUser.role !== UserRole.ADMIN) {
+    // 检查是否为管理员（管理员或超级管理员）
+    if (!hasManagementAccess(adminUser.role)) {
       return { success: false, error: '只有管理员可以删除用户' };
     }
 

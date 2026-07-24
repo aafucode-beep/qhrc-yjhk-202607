@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { createSupabaseServerClientWithCookies } from '@/lib/supabase-server';
+import { createSupabaseServerClientWithCookies, createSupabaseAdminClient } from '@/lib/supabase-server';
 import { UserRole, OperationType } from '@/types';
 import { logOperation } from '@/lib/operations';
 
@@ -52,8 +52,9 @@ export async function POST(
       );
     }
 
-    // 更新用户密码
-    const { error: updateError } = await supabase.auth.admin.updateUserById(
+    // 更新用户密码（需要 service role 密钥）
+    const adminSupabase = createSupabaseAdminClient();
+    const { error: updateError } = await adminSupabase.auth.admin.updateUserById(
       userId,
       { password: newPassword }
     );
